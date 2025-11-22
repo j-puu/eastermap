@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Interactive Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    var map = L.map('map').setView([61.9857613, 24.5215417], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+
+    const points = [
+      ["Sami", 63.0930951, 21.6081169],
+      ["Hepe", 62.292894, 27.104211],
+      ["Jussi", 61.56993, 23.58866],
+      ["Tatu", 60.45079, 22.2521],
+      ["Ville", 62.14474, 25.49559],
+      ["Leikas", 62.84018, 27.68477],
+      ["Petri", 61.5087, 23.917344],
+      ["Jarno", 61.462654, 23.84728]
+    ];
+
+    const center = points.reduce((acc, [, lat, lng]) => {
+      acc.lat += lat;
+      acc.lng += lng;
+      return acc;
+    }, { lat: 0, lng: 0 });
+    center.lat /= points.length;
+    center.lng /= points.length;
+
+    map.setView([center.lat, center.lng], map.getZoom());
+
+    points.forEach(p => {
+      L.marker([p[1], p[2]])
+        .addTo(map)
+        .bindPopup(p[0])
+        .bindTooltip(p[0], { permanent: true, direction: 'top' })
+        .openTooltip();
+    });
+
+    L.circleMarker([center.lat, center.lng], {
+      radius: 10,
+      color: 'red',
+      fillColor: 'red',
+      fillOpacity: 0.8
+    })
+      .addTo(map)
+      .bindPopup(`Center of mass (${center.lat.toFixed(3)}, ${center.lng.toFixed(3)})`)
+      .bindTooltip('Center of mass', { permanent: true, direction: 'bottom' })
+      .openTooltip();
+
+    const cabins = [
+      {
+        name: 'Villa Miestamo',
+        lat: 61.947344,
+        lng: 24.038695,
+        url: 'https://www.lomarengas.fi/mokit/ruovesi-villa-miestamo-12547?startDate=3.4.2026&endDate=6.4.2026'
+      },
+      {
+        name: 'Lammassaari',
+        lat: 61.812052,
+        lng: 24.880879,
+        url: 'https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026'
+      }
+    ];
+
+    cabins.forEach(cabin => {
+      const link = `<a href="${cabin.url}" target="_blank" rel="noopener noreferrer">${cabin.name}</a>`;
+      L.circleMarker([cabin.lat, cabin.lng], {
+        radius: 6,
+        color: 'green',
+        fillColor: 'green',
+        fillOpacity: 0.9
+      })
+        .addTo(map)
+        .bindPopup(link)
+        .bindTooltip(cabin.name, { permanent: true, direction: 'top' })
+        .openTooltip();
+    });
+  </script>
+</body>
+</html>
