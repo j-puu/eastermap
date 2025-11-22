@@ -7,6 +7,9 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     #map { height: 100vh; }
+    .leaflet-tooltip.cabin-label {
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body>
@@ -84,7 +87,7 @@
       })
         .addTo(map)
         .bindPopup(link)
-        .bindTooltip(cabin.name, { permanent: true, direction: 'top' })
+        .bindTooltip(link, { permanent: true, direction: 'top', className: 'cabin-label' })
         .openTooltip();
     });
   </script>
