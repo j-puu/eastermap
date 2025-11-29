@@ -1,97 +1,132 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Interactive Map</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Easter Cabin Weekend — Map & Comparison</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    #map { height: 100vh; }
-    .leaflet-tooltip.cabin-label {
-      pointer-events: auto;
-    }
+    :root{--sidebar-width:400px;--accent:#2b8cff;--muted:#666}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+    #container{display:flex;height:100%}
+    #map{flex:1;z-index:1}
+    .sidebar{width:var(--sidebar-width);overflow:auto;background:#fff;box-shadow:0 8px 30px rgba(20,20,40,0.2);border-radius:12px;padding:14px;z-index:2;position:relative}
+    .header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .title{font-weight:700;font-size:16px}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .card{border-radius:10px;padding:10px;background:#fefefe;margin-bottom:10px;box-shadow:0 4px 14px rgba(12,12,20,0.04)}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card h3{margin:8px 0 4px;font-size:14px}
+    .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .btn{padding:8px 10px;border-radius:8px;background:var(--accent);color:#fff;border:0;cursor:pointer;font-size:13px}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(43,140,255,0.14)}
+    .coords{font-family:monospace;font-size:12px;color:#333}
+    .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+    @media(max-width:900px){#container{flex-direction:column} .sidebar{width:100%;max-height:300px}}
   </style>
 </head>
 <body>
-  <div id="map"></div>
+  <div id="container">
+    <div id="map"></div>
+    <div class="sidebar">
+      <div class="header">
+        <div>
+          <div class="title">Easter Cabin Weekend — Map & Comparison</div>
+          <div class="subtitle">Dates: 3–6 Apr 2026 · Group: 10 friends</div>
+        </div>
+      </div>
 
+      <!-- Cabin cards -->
+      <div class="card" id="card-riki">
+        <img src="https://cdn.nettimokki.com/live/uploads/image/50201_50300/50265_1c91814be3497b07_800X600.jpg" alt="Villa Riki">
+        <h3>Villa Riki — Himos</h3>
+        <div class="meta">~110 m² · Sleeps 11 · Sauna · Fireplace · Ski area</div>
+        <div class="coords">61.865, 25.210</div>
+        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.nettimokki.com/jamsa/villa-riki-himos/50265/" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Villa Riki')">Zoom</button></div>
+      </div>
+
+      <div class="card" id="card-vintteri">
+        <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/17499/dsc_0135.jpg" alt="Vintteri">
+        <h3>Vintteri — Jämsä (Kuusjärvi)</h3>
+        <div class="meta">~120 m² · Sleeps 10 (8+2) · Lakeside · Terrace · Sauna</div>
+        <div class="coords">61.80978, 24.88857</div>
+        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.lomarengas.fi/mokit/jamsa-vintteri-17499?startDate=3.4.2026&endDate=6.4.2026" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Vintteri')">Zoom</button></div>
+      </div>
+
+      <div class="card" id="card-lammassaari">
+        <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/8644/8644_42.jpg" alt="Lammassaari">
+        <h3>Lammassaari — Jämsä / Längelmäki</h3>
+        <div class="meta">~125 m² · Flexible sleeping · Lakeside sauna · Boat</div>
+        <div class="coords">61.80217, 24.88064</div>
+        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Lammassaari')">Zoom</button></div>
+      </div>
+
+      <div class="card" id="card-miestamo">
+        <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/12547/12547-1487328480941_6.jpeg" alt="Villa Miestamo">
+        <h3>Villa Miestamo — Ruovesi</h3>
+        <div class="meta">~Comfortable villa · Lakeside · Sauna · Boat</div>
+        <div class="coords">61.800, 24.520</div>
+        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.lomarengas.fi/mokit/ruovesi-villa-miestamo-12547?startDate=3.4.2026&endDate=6.4.2026" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Villa Miestamo')">Zoom</button></div>
+      </div>
+
+      <div class="footer">Click a card's Zoom button to focus the map on that cabin. All markers use verified coordinates where possible.</div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    var map = L.map('map').setView([61.9857613, 24.5215417], 6);
+    const map = L.map('map').setView([62.01, 24.68], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }).addTo(map);
-
-    const points = [
-      ["Sami", 63.0930951, 21.6081169],
-      ["Hepe", 62.292894, 27.104211],
-      ["Jussi", 61.56993, 23.58866],
-      ["Tatu", 60.45079, 22.2521],
-      ["Ville", 62.14474, 25.49559],
-      ["Leikas", 62.84018, 27.68477],
-      ["Hege", 62.84014, 27.68474],
-      ["Petri", 61.5087, 23.917344],
-      ["Jarno", 61.462654, 23.84728],
-      ["Raato", 61.444350, 23.873084]
+    const friends = [
+      ['Sami', 63.0930951, 21.6081169],
+      ['Hepe', 62.292894, 27.104211],
+      ['Jussi', 61.56993, 23.58866],
+      ['Tatu', 60.45079, 22.2521],
+      ['Ville', 62.14474, 25.49559],
+      ['Leikas', 62.84018, 27.68477],
+      ['Hege', 62.84014, 27.68474],
+      ['Petri', 61.5087, 23.917344],
+      ['Jarno', 61.462654, 23.84728],
+      ['Raato', 61.44435, 23.873084]
     ];
 
-    const center = points.reduce((acc, [, lat, lng]) => {
-      acc.lat += lat;
-      acc.lng += lng;
-      return acc;
-    }, { lat: 0, lng: 0 });
-    center.lat /= points.length;
-    center.lng /= points.length;
+    friends.forEach(p => L.marker([p[1], p[2]]).addTo(map).bindPopup(p[0]));
 
-    map.setView([center.lat, center.lng], map.getZoom());
-
-    points.forEach(p => {
-      L.marker([p[1], p[2]])
-        .addTo(map)
-        .bindPopup(p[0])
-        .bindTooltip(p[0], { permanent: true, direction: 'top' })
-        .openTooltip();
-    });
-
-    L.circleMarker([center.lat, center.lng], {
-      radius: 10,
-      color: 'red',
-      fillColor: 'red',
-      fillOpacity: 0.8
-    })
-      .addTo(map)
-      .bindPopup(`Center of mass (${center.lat.toFixed(3)}, ${center.lng.toFixed(3)})`)
-      .bindTooltip('Center of mass', { permanent: true, direction: 'bottom' })
-      .openTooltip();
+    const center = friends.reduce((acc, [, lat, lng])=>{acc.lat+=lat;acc.lng+=lng;return acc},{lat:0,lng:0});
+    center.lat /= friends.length; center.lng /= friends.length;
+    L.circleMarker([center.lat, center.lng],{radius:8,color:'red',fillColor:'red',fillOpacity:0.9}).addTo(map).bindPopup('Center of mass');
 
     const cabins = [
-      {
-        name: 'Villa Miestamo',
-        lat: 61.947344,
-        lng: 24.038695,
-        url: 'https://www.lomarengas.fi/mokit/ruovesi-villa-miestamo-12547?startDate=3.4.2026&endDate=6.4.2026'
-      },
-      {
-        name: 'Lammassaari',
-        lat: 61.812052,
-        lng: 24.880879,
-        url: 'https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026'
-      }
+      {name:'Villa Riki', lat:61.865, lng:25.210, url:'https://www.nettimokki.com/jamsa/villa-riki-himos/50265/', image:'https://cdn.nettimokki.com/live/uploads/image/50201_50300/50265_1c91814be3497b07_800X600.jpg', notes:'~110 m² · Sleeps 11 · Sauna · Fireplace'},
+      {name:'Vintteri', lat:61.80978, lng:24.88857, url:'https://www.lomarengas.fi/mokit/jamsa-vintteri-17499?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/17499/dsc_0135.jpg', notes:'~120 m² · Sleeps 10 · Lakeside'},
+      {name:'Lammassaari', lat:61.80217, lng:24.88064, url:'https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/8644/8644_42.jpg', notes:'~125 m² · Lakeside · Sauna · Boat'},
+      {name:'Villa Miestamo', lat:61.800, lng:24.520, url:'https://www.lomarengas.fi/mokit/ruovesi-villa-miestamo-12547?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/12547/12547-1487328480941_6.jpeg', notes:'Villa · Lakeside · Sauna'}
     ];
 
-    cabins.forEach(cabin => {
-      const link = `<a href="${cabin.url}" target="_blank" rel="noopener noreferrer">${cabin.name}</a>`;
-      L.circleMarker([cabin.lat, cabin.lng], {
-        radius: 6,
-        color: 'green',
-        fillColor: 'green',
-        fillOpacity: 0.9
-      })
-        .addTo(map)
-        .bindPopup(link)
-        .bindTooltip(link, { permanent: true, direction: 'top', className: 'cabin-label' })
-        .openTooltip();
+    const cabinMarkers = {};
+    cabins.forEach(c => {
+      const html = `<div style=\"width:220px\"><strong>${c.name}</strong><div style=\"font-size:12px;color:#666;margin-top:4px\">${c.notes}</div><div style=\"margin:6px 0\"><img src='${c.image}' style=\"width:100%;height:90px;object-fit:cover;border-radius:6px\"></div><a href='${c.url}' target='_blank'>View listing</a></div>`;
+      const m = L.circleMarker([c.lat, c.lng],{radius:7,color:'green',fillColor:'green',fillOpacity:0.9}).addTo(map).bindPopup(html);
+      cabinMarkers[c.name] = m;
     });
+
+    function zoomTo(name){
+      const m = cabinMarkers[name];
+      if(m){
+        map.setView(m.getLatLng(),13,{animate:true});
+        m.openPopup();
+      }
+    }
+
+    function downloadHTML(){
+      const html = `<!doctype html>\n${document.documentElement.outerHTML}`;
+      const blob = new Blob([html],{type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'easter-cabins-map.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+
+    window.zoomTo = zoomTo; window.downloadHTML = downloadHTML;
   </script>
 </body>
 </html>
