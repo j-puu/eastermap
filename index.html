@@ -37,29 +37,6 @@
       </div>
 
       <!-- Cabin cards -->
-      <div class="card" id="card-riki">
-        <img src="https://cdn.nettimokki.com/live/uploads/image/50201_50300/50265_1c91814be3497b07_800X600.jpg" alt="Villa Riki">
-        <h3>Villa Riki — Himos</h3>
-        <div class="meta">~110 m² · Sleeps 11 · Sauna · Fireplace · Ski area</div>
-        <div class="coords">61.865, 25.210</div>
-        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.nettimokki.com/jamsa/villa-riki-himos/50265/" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Villa Riki')">Zoom</button></div>
-      </div>
-
-      <div class="card" id="card-vintteri">
-        <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/17499/dsc_0135.jpg" alt="Vintteri">
-        <h3>Vintteri — Jämsä (Kuusjärvi)</h3>
-        <div class="meta">~120 m² · Sleeps 10 (8+2) · Lakeside · Terrace · Sauna</div>
-        <div class="coords">61.80978, 24.88857</div>
-        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.lomarengas.fi/mokit/jamsa-vintteri-17499?startDate=3.4.2026&endDate=6.4.2026" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Vintteri')">Zoom</button></div>
-      </div>
-
-      <div class="card" id="card-lammassaari">
-        <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/8644/8644_42.jpg" alt="Lammassaari">
-        <h3>Lammassaari — Jämsä / Längelmäki</h3>
-        <div class="meta">~125 m² · Flexible sleeping · Lakeside sauna · Boat</div>
-        <div class="coords">61.80217, 24.88064</div>
-        <div style="margin-top:8px;display:flex;gap:8px"><a class="btn" href="https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026" target="_blank">View listing</a><button class="btn ghost" onclick="zoomTo('Lammassaari')">Zoom</button></div>
-      </div>
 
       <div class="card" id="card-miestamo">
         <img src="https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/12547/12547-1487328480941_6.jpeg" alt="Villa Miestamo">
@@ -98,9 +75,6 @@
     L.circleMarker([center.lat, center.lng],{radius:8,color:'red',fillColor:'red',fillOpacity:0.9}).addTo(map).bindPopup('Center of mass');
 
     const cabins = [
-      {name:'Villa Riki', lat:61.865, lng:25.210, url:'https://www.nettimokki.com/jamsa/villa-riki-himos/50265/', image:'https://cdn.nettimokki.com/live/uploads/image/50201_50300/50265_1c91814be3497b07_800X600.jpg', notes:'~110 m² · Sleeps 11 · Sauna · Fireplace'},
-      {name:'Vintteri', lat:61.80978, lng:24.88857, url:'https://www.lomarengas.fi/mokit/jamsa-vintteri-17499?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/17499/dsc_0135.jpg', notes:'~120 m² · Sleeps 10 · Lakeside'},
-      {name:'Lammassaari', lat:61.80217, lng:24.88064, url:'https://www.lomarengas.fi/mokit/jamsa-langelmaki-lammassaari-8644?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/8644/8644_42.jpg', notes:'~125 m² · Lakeside · Sauna · Boat'},
       {name:'Villa Miestamo', lat:61.800, lng:24.520, url:'https://www.lomarengas.fi/mokit/ruovesi-villa-miestamo-12547?startDate=3.4.2026&endDate=6.4.2026', image:'https://lmrprodstorageaccount.blob.core.windows.net/assets/serviceimages/12547/12547-1487328480941_6.jpeg', notes:'Villa · Lakeside · Sauna'}
     ];
 
